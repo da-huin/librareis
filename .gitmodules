@@ -1,12 +1,12 @@
 [submodule "aws-glove"]
 	path = aws-glove
-	url = https://github.com/jaden-git/aws-glove
+	url = https://github.com/da-huin/aws-glove
 [submodule "easy-spreadsheet"]
 	path = easy-spreadsheet
-	url = https://github.com/jaden-git/easy-spreadsheet
+	url = https://github.com/da-huin/easy-spreadsheet
 [submodule "simple-utils"]
 	path = simple-utils
-	url = https://github.com/jaden-git/simple-utils
+	url = https://github.com/da-huin/simple-utils
 [submodule "spreadsheet-db"]
 	path = spreadsheet-db
-	url = https://github.com/jaden-git/spreadsheet-db
+	url = https://github.com/da-huin/spreadsheet-db
