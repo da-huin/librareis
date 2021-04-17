@@ -56,7 +56,7 @@ def update_readme():
                 'classes': {}
             }
 
-            with open(filepath, 'r') as fp:
+            with open(filepath, 'r', encoding='utf-8') as fp:
                 file_contents = fp.read()
 
             node = ast.parse(file_contents)
@@ -100,12 +100,12 @@ def update_readme():
         print()
     
 
-    with open(f'{args.library_name}/readme_template.md') as fp:
+    with open(f'{args.library_name}/readme_template.md', 'r', encoding='utf-8') as fp:
         readme_template = fp.read()
 
     template = jinja2.Template(readme_template)
 
-    with open(f'{args.library_name}/README.md', 'w') as fp:
+    with open(f'{args.library_name}/README.md', 'w', encoding='utf-8') as fp:
         fp.write(template.render(usage=usage))
 
     print('README.md가 업데이트 되었습니다.')
