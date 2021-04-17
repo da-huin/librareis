@@ -10,3 +10,6 @@
 [submodule "spreadsheet-db"]
 	path = spreadsheet-db
 	url = https://github.com/da-huin/spreadsheet-db
+[submodule "worldmap"]
+	path = worldmap
+	url = https://github.com/da-huin/worldmap
