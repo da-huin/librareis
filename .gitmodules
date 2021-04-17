@@ -10,3 +10,6 @@
 [submodule "spreadsheet-db"]
 	path = spreadsheet-db
 	url = https://github.com/da-huin/spreadsheet-db
+[submodule "ifmap"]
+	path = ifmap
+	url = https://github.com/da-huin/ifmap
