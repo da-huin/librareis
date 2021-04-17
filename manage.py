@@ -168,8 +168,7 @@ elif args.kind == 'test_and_deploy' or args.kind == '2':
 
     cd_command = f'cd {os.path.dirname(os.path.abspath(__file__))}/{args.library_name}'
     pypi_deploy_command = f'python3 setup.py sdist bdist_wheel && python3 -m twine upload --skip-existing dist/*'
-    test_command = f'cd tests && pytest -s && cd ..'
-    test_command = ''
+    test_command = f'cd tests && python3 -m pytest -s && cd ..'
     git_push_command = f'git add . && git commit -m "{args.commit_message}" && git pull origin master && git push -u origin master'
 
     all_command = ' && '.join([cd_command, test_command, pypi_deploy_command, git_push_command])
