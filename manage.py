@@ -6,6 +6,8 @@ import jinja2
 import os
 import subprocess
 import argparse
+
+
 def update_readme():
     def get_docstring(node):
         docstring = ast.get_docstring(node)
@@ -26,7 +28,7 @@ def update_readme():
             if not method_doc:
                 print('■ 함수', method_name, '은 __doc__가 없기 때문에 무시했습니다.')
                 continue
-            
+
             name = f'{class_name} - {method_name}' if class_name else method_name
 
             body += f"### 🌱 *(method)* `{name}`\n\n{method_doc}\n\n"
@@ -40,7 +42,8 @@ def update_readme():
                 print('■ 클래스', class_name, '은 __doc__가 없기 때문에 무시했습니다.')
                 continue
             body += f"### 🌱 *(class)* `{class_name}`\n\n{class_doc}\n\n"
-            body += get_methods_body(classes[class_name]['methods'], class_name)
+            body += get_methods_body(classes[class_name]
+                                     ['methods'], class_name)
         return body
 
     walk_dir = f'{args.library_name}/{args.library_name.replace("-", "_")}'
@@ -61,11 +64,12 @@ def update_readme():
 
             node = ast.parse(file_contents)
 
-            functions = [n for n in node.body if isinstance(n, ast.FunctionDef)]
+            functions = [n for n in node.body if isinstance(
+                n, ast.FunctionDef)]
             classes = [n for n in node.body if isinstance(n, ast.ClassDef)]
 
             define['module'] = {
-            'doc': get_docstring(node)
+                'doc': get_docstring(node)
             }
 
             for method_node in functions:
@@ -79,14 +83,14 @@ def update_readme():
                     'methods': {},
                     'doc': get_docstring(class_node)
                 }
-                
-                methods = [n for n in class_node.body if isinstance(n, ast.FunctionDef)]
+
+                methods = [n for n in class_node.body if isinstance(
+                    n, ast.FunctionDef)]
                 for method_node in methods:
                     define['classes'][class_node.name]['methods'][method_node.name] = {
                         'doc': get_docstring(method_node)
                     }
             defines[f"{dirpath}/{filename}"[len(walk_dir) + 1:]] = define
-
 
     usage = {}
     for filepath in defines:
@@ -98,7 +102,6 @@ def update_readme():
 
         usage[filepath] = body
         print()
-    
 
     with open(f'{args.library_name}/readme_template.md', 'r', encoding='utf-8') as fp:
         readme_template = fp.read()
@@ -109,6 +112,8 @@ def update_readme():
         fp.write(template.render(usage=usage))
 
     print('README.md가 업데이트 되었습니다.')
+
+
 def check_output(command):
     result = ""
     print(command)
@@ -126,16 +131,20 @@ def check_output(command):
         result += line
 
     return result
+
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument('kind')
 parser.add_argument('library_name')
+parser.add_argument('--test')
 parser.add_argument('-m', '--commit-message')
 
 args = parser.parse_args()
 
 if args.kind == 'test' or args.kind == '1':
-    check_output(f'cd {os.path.dirname(os.path.abspath(__file__))}/{args.library_name}/tests && pytest -s')
+    check_output(
+        f'cd {os.path.dirname(os.path.abspath(__file__))}/{args.library_name}/tests && pytest -s')
 
 elif args.kind == 'test_and_deploy' or args.kind == '2':
     if not args.commit_message:
@@ -156,8 +165,9 @@ elif args.kind == 'test_and_deploy' or args.kind == '2':
                 version = line[start_index + 1:end_index]
                 version_numbers = version.split('.')
                 version_numbers[-1] = str(int(version_numbers[-1]) + 1)
-                line = line[:start_index] + '\'' + '.'.join(version_numbers) + '\','
-            
+                line = line[:start_index] + '\'' + \
+                    '.'.join(version_numbers) + '\','
+
             lines.append(line)
 
     setup_body = '\n'.join(lines)
@@ -168,13 +178,15 @@ elif args.kind == 'test_and_deploy' or args.kind == '2':
 
     cd_command = f'cd {os.path.dirname(os.path.abspath(__file__))}/{args.library_name}'
     pypi_deploy_command = f'python3 setup.py sdist bdist_wheel && python3 -m twine upload --skip-existing dist/*'
-    test_command = f'cd tests && python3 -m pytest -s && cd ..'
+    test_command = f'cd tests && python3 -m pytest -s && cd ..' if args.test else ''
     git_push_command = f'git add . && git commit -m "{args.commit_message}" && git pull origin master && git push -u origin master'
 
-    all_command = ' && '.join([cd_command, test_command, pypi_deploy_command, git_push_command])
+    all_command = ' && '.join(cmd for cmd in [
+                              cd_command, test_command, pypi_deploy_command, git_push_command] if cmd)
     check_output(all_command)
 
-    check_output(f'git add . && git commit -m "{args.library_name} {".".join(version_numbers)} released." && git pull origin master && git push -u origin master')
+    check_output(
+        f'git add . && git commit -m "{args.library_name} {".".join(version_numbers)} released." && git pull origin master && git push -u origin master')
 
 elif args.kind == 'readme' or args.kind == '3':
     update_readme()
