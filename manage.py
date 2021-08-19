@@ -154,7 +154,7 @@ elif args.kind == 'test_and_deploy' or args.kind == '2':
 
     setup_filepath = f'{args.library_name}/setup.py'
     lines = []
-    with open(setup_filepath, 'r') as fp:
+    with open(setup_filepath, 'r', encoding='utf-8') as fp:
         setup_str = fp.read()
         for line in setup_str.split('\n'):
 
@@ -171,7 +171,7 @@ elif args.kind == 'test_and_deploy' or args.kind == '2':
             lines.append(line)
 
     setup_body = '\n'.join(lines)
-    with open(setup_filepath, 'w') as fp:
+    with open(setup_filepath, 'w', encoding='utf-8') as fp:
         fp.write(setup_body)
 
     print('버전을 업데이트 했습니다.')
